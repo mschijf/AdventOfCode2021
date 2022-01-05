@@ -1,4 +1,4 @@
-package com.adventofcode.december00;
+package com.adventofcode.december13;
 
 import java.util.List;
 
@@ -12,20 +12,21 @@ public class MainProgram {
 
     //-----------------------------------------------------------
 
-    private List<BaseClass> baseClassList;
-    private BaseClass baseClass;
+    private DotsPattern dotsPattern;
 
-    private static final String monthNumber = "12";
+    private static final String monthNumber = "13";
     private static final String postfix = "1";
 
     public MainProgram() {
         Input input = new Input("input" + monthNumber + "_" + postfix);
-        baseClassList = input.getBaseClassLines();
-        baseClass = input.getBaseClass();
+        dotsPattern = input.getDotsPattern();
     }
 
     public long run() {
-        long sum = 0;
-        return sum;
+//        dotsPattern.print();
+        dotsPattern.fold();
+        System.out.println("==================================================================");
+        dotsPattern.print();
+        return dotsPattern.countVisible();
     }
 }

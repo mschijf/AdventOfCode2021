@@ -1,4 +1,4 @@
-package com.adventofcode.december00;
+package com.adventofcode.december13;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,16 +20,8 @@ public class Input {
 
     //-----------------------------------------------------------------------------------------------------------
 
-    public List<BaseClass> getBaseClassLines() {
-        List<BaseClass> list = new ArrayList<>();
-        for (String s: inputList) {
-            list.add(new BaseClass(s));
-        }
-        return list;
-    }
-
-    public BaseClass getBaseClass() {
-        return new BaseClass(inputList);
+    public DotsPattern getDotsPattern() {
+        return new DotsPattern(inputList);
     }
 
 
