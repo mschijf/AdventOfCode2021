@@ -48,12 +48,9 @@ public class HeightMap {
         List<Integer> basinSizeList = new ArrayList<>();
         for (int r = 0; r < heightMap.length; ++r) {
             for (int c = 0; c < heightMap[r].length; ++c) {
-                if (       (c == 0                       || heightMap[r][c] < heightMap[r][c - 1])
-                        && (c == heightMap[r].length - 1 || heightMap[r][c] < heightMap[r][c + 1])
-                        && (r == 0                       || heightMap[r][c] < heightMap[r - 1][c])
-                        && (r == heightMap.length - 1    || heightMap[r][c] < heightMap[r + 1][c])
-                ) {
-                    basinSizeList.add(countBasinSize(r,c));
+                if (heightMap[r][c] != 9) {
+                    int basinSize = countBasinSize(r,c);
+                    basinSizeList.add(basinSize);
                 }
             }
         }

@@ -50,7 +50,7 @@ public class OctopusEnergyMap {
             if (row+1 < max && col+1 < max) updateField(row+1, col+1);
         }
 
-        //third round: add 1 to each
+        //third round: reset higher than 10 to 0
         for (int row = 0; row < energyMap.length; ++row) {
             for (int col = 0; col < energyMap[row].length; ++col) {
                 resetFlashField(row, col);
