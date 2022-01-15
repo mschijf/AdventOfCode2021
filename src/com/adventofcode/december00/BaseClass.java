@@ -8,11 +8,6 @@ public class BaseClass {
         int lineCount = 0;
         for (String line: inputLineList) {
             ++lineCount;
-
         }
     }
-
-    public BaseClass(String line) {
-    }
-
 }

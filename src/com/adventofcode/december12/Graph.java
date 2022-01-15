@@ -49,7 +49,8 @@ public class Graph {
 //        return path.contains(node); // <-- genoeg voor deel 1
         if (!path.contains(node))
             return false;
-        List<String> nodes = Arrays.stream(path.split(","))
+        List<String> nodes =
+                Arrays.stream(path.split(","))
                 .filter(s->s.equals(s.toLowerCase(Locale.ROOT)))
                 .collect(Collectors.toList());
         for (int i=0; i<nodes.size()-1; ++i) {

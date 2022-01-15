@@ -1,6 +1,4 @@
-package com.adventofcode.december00;
-
-import java.util.List;
+package com.adventofcode.december15;
 
 public class MainProgram {
 
@@ -10,9 +8,9 @@ public class MainProgram {
 
     //-----------------------------------------------------------
 
-    private BaseClass baseClass;
+    private CavernMap cavernMap;
 
-    private static final String monthNumber = "12";
+    private static final String monthNumber = "15";
     private static final String postfix = "1";
 
     public MainProgram() {
@@ -20,14 +18,14 @@ public class MainProgram {
         System.out.println("We run with file " + fileName);
 
         Input input = new Input(fileName);
-        baseClass = input.getBaseClass();
+        cavernMap = input.getBaseClass();
 
         long output = run();
         System.out.println("Puzzle output : " + output);
     }
 
     public long run() {
-        long sum = 0;
+        long sum = cavernMap.findShortestPath();
         return sum;
     }
 }

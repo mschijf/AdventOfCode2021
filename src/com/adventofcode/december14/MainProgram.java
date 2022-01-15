@@ -24,9 +24,9 @@ public class MainProgram {
     }
 
     public long run() {
-//        long sum = polymer.runProcesses(10);
+        long sum = polymer.runProcesses(40);
 //        long sum = polymer.runProcessesAlternative(10);
-        long sum = polymer.runProcessesAlternative(40);
+//        long sum = polymer.runProcessesAlternative(40);
         return sum;
     }
 }

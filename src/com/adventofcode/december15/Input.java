@@ -1,4 +1,4 @@
-package com.adventofcode.december00;
+package com.adventofcode.december15;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,8 +20,8 @@ public class Input {
 
     //-----------------------------------------------------------------------------------------------------------
 
-    public BaseClass getBaseClass() {
-        return new BaseClass(inputList);
+    public CavernMap getBaseClass() {
+        return new CavernMap(inputList);
     }
 
 
