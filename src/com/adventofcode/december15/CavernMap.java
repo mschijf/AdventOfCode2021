@@ -6,17 +6,38 @@ public class CavernMap {
 
     private Position[][] riskMap;
 
-    public CavernMap(List<String> inputLineList) {
-        riskMap = new Position[inputLineList.size()][];
+    public CavernMap(List<String> inputLineList, boolean timesFive) {
+        int maxRepeat = timesFive ? 5 : 1;
+        riskMap = new Position[maxRepeat * inputLineList.size()][];
         int lineCount = 0;
-        for (String line: inputLineList) {
-            riskMap[lineCount] = new Position[line.length()];
-            for (int i=0; i < line.length(); ++i) {
-                riskMap[lineCount][i] = new Position(line.charAt(i) - '0');
+        for (int rowRepeat=0; rowRepeat < maxRepeat; ++rowRepeat) {
+            for (String line : inputLineList) {
+                riskMap[lineCount] = new Position[maxRepeat * line.length()];
+                for (int colRepeat = 0; colRepeat < maxRepeat; ++colRepeat) {
+                    for (int i = 0; i < line.length(); ++i) {
+                        int val = (line.charAt(i) - '0');
+                        val = 1 + ((val + colRepeat + rowRepeat - 1) % 9);
+                        int thiscl = i + line.length() * colRepeat;
+                        riskMap[lineCount][thiscl] = new Position(lineCount, thiscl, val);
+                    }
+                }
+                ++lineCount;
             }
-            ++lineCount;
         }
         initNeighBours();
+    }
+
+    public void print() {
+        for (int row=0; row < riskMap.length; ++row) {
+            for (int col=0; col < riskMap[row].length; ++col) {
+                System.out.print(riskMap[row][col].getRiskLevel());
+            }
+            System.out.println();
+        }
+    }
+
+    public CavernMap(List<String> inputLineList) {
+        this(inputLineList, false);
     }
 
     private void initNeighBours() {

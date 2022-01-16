@@ -24,6 +24,9 @@ public class Input {
         return new CavernMap(inputList);
     }
 
+    public CavernMap getBaseClass(boolean timesFive) {
+        return new CavernMap(inputList, timesFive);
+    }
 
     //-----------------------------------------------------------------------------------------------------------
 
