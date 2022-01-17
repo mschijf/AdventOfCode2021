@@ -1,7 +1,5 @@
 package com.adventofcode.december00;
 
-import java.util.List;
-
 public class MainProgram {
 
     public static void main(String[] args) {
@@ -12,13 +10,10 @@ public class MainProgram {
 
     private BaseClass baseClass;
 
-    private static final String monthNumber = "12";
-    private static final String postfix = "1";
+    private static final boolean test = false;
 
     public MainProgram() {
-        String fileName = "input" + monthNumber + "_" + postfix;
-        System.out.println("We run with file " + fileName);
-
+        String fileName = getFileName(test);
         Input input = new Input(fileName);
         baseClass = input.getBaseClass();
 
@@ -30,4 +25,20 @@ public class MainProgram {
         long sum = 0;
         return sum;
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private String getFileName(boolean test) {
+        int day = getDayOfMonthFromClassName();
+        return "input" + String.format("%02d", day) + "_" + (test ? "example" : "1");
+    }
+
+    private int getDayOfMonthFromClassName() {
+        String monthName = "december";
+        int i = this.getClass().getName().indexOf(monthName);
+        int j = this.getClass().getName().lastIndexOf(".");
+        String dayOfMonth = this.getClass().getName().substring(i + monthName.length(), j);
+        return Integer.parseInt(dayOfMonth);
+    }
+
 }

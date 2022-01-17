@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Position {
+    public static int visitCount = 0;
+    public static int updateCount = 0;
+
     private int riskLevel;
     private Integer riskLevelFromStart;
     private Set<Position> neighBourSet;
@@ -22,20 +25,26 @@ public class Position {
         return riskLevel;
     }
 
-    public void initRiskLevelFromStart() {
-        this.riskLevelFromStart = riskLevel;
-    }
-
     public void calculateRiskLevelFromStart() {
+        ++visitCount;
         if (hasRiskLeveFromStart())
             return;
 
-        int min = 999999;
+        boolean hasKnowNeighbour = false;
+        int min = Integer.MAX_VALUE;
         for (Position neighbour: this.getNeighBourSet()) {
-            if (neighbour.hasRiskLeveFromStart() && neighbour.getRiskLevelFromStart() < min)
-                min = neighbour.getRiskLevelFromStart();
+            if (neighbour.hasRiskLeveFromStart()) {
+                hasKnowNeighbour = true;
+                if (neighbour.getRiskLevelFromStart() < min) {
+                    min = neighbour.getRiskLevelFromStart();
+                }
+            }
         }
-        if (min < 999999) {
+        if (!hasKnowNeighbour) {
+            updateCount++;
+            this.riskLevelFromStart = riskLevel;
+        } else if (min < Integer.MAX_VALUE) {
+            updateCount++;
             this.riskLevelFromStart = min + riskLevel;
             updateRiskValueNeighBours(min + riskLevel);
         }
@@ -48,24 +57,15 @@ public class Position {
     }
 
     private void updateRiskLevelFromStart(int otherPath) {
-        if (this.hasRiskLeveFromStart() && (otherPath + this.riskLevel) < (this.getRiskLevelFromStart())) {
-            this.riskLevelFromStart = otherPath + riskLevel;
-            updateRiskValueNeighBours(otherPath + riskLevel);
+        ++visitCount;
+        if (this.hasRiskLeveFromStart()) {
+            if ((otherPath + this.riskLevel) < (this.getRiskLevelFromStart())){
+                ++updateCount;
+                this.riskLevelFromStart = otherPath + riskLevel;
+                updateRiskValueNeighBours(otherPath + riskLevel);
+            }
         }
     }
-
-//    private static int countV = 0;
-//    public void verify() {
-//        int min = 999999;
-//        for (Position neighbour: this.getNeighBourSet()) {
-//            if (neighbour.getRiskLevelFromStart() < min)
-//                min = neighbour.getRiskLevelFromStart();
-//        }
-//        if (riskLevel + min != riskLevelFromStart) {
-//            countV++;
-//            System.out.println(" ["+row+"]["+col+"] : " + countV);
-//        }
-//    }
 
     public int getRiskLevelFromStart() {
         return riskLevelFromStart;

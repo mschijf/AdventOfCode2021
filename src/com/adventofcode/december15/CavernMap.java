@@ -59,7 +59,6 @@ public class CavernMap {
     }
 
     private void determinePathLengths() {
-        riskMap[0][0].initRiskLevelFromStart();
         for (int row=0; row < riskMap.length; ++row) {
             for (int col=0; col < riskMap[row].length; ++col) {
                 riskMap[row][col].calculateRiskLevelFromStart();

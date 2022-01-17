@@ -10,14 +10,10 @@ public class MainProgram {
 
     private CavernMap cavernMap;
 
-    private static final String monthNumber = "15";
-    private static final String examplePostfix = "example";
-    private static final boolean test =  false;
+    private static final boolean test = false;
 
     public MainProgram() {
-        String fileName = "input" + monthNumber + "_" + (test ? examplePostfix : "1");
-        System.out.println((test ? "TEST TEST TEST " : "") + "We run with file " + fileName);
-
+        String fileName = getFileName(test);
         Input input = new Input(fileName);
         cavernMap = input.getBaseClass(true);
 
@@ -28,6 +24,22 @@ public class MainProgram {
     public long run() {
 //        cavernMap.print();
         long sum = cavernMap.findShortestPath();
+        System.out.println("Nodes visited " + Position.visitCount);
+        System.out.println("Nodes updated " + Position.updateCount);
         return sum;
     }
+
+    private String getFileName(boolean test) {
+        int day = getDayOfMonthFromClassName();
+        return "input" + String.format("%02d", day) + "_" + (test ? "example" : "1");
+    }
+
+    private int getDayOfMonthFromClassName() {
+        String monthName = "december";
+        int i = this.getClass().getName().indexOf(monthName);
+        int j = this.getClass().getName().lastIndexOf(".");
+        String dayOfMonth = this.getClass().getName().substring(i + monthName.length(), j);
+        return Integer.parseInt(dayOfMonth);
+    }
+
 }
