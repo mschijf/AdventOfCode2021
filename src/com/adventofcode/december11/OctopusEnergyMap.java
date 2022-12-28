@@ -1,6 +1,7 @@
 package com.adventofcode.december11;
 
-import javafx.util.Pair;
+
+import kotlin.Pair;
 
 import java.util.List;
 import java.util.Stack;
@@ -35,8 +36,8 @@ public class OctopusEnergyMap {
             countFlash++;
 
             Pair<Integer, Integer> pair = stack.pop();
-            int row = pair.getKey();
-            int col = pair.getValue();
+            int row = pair.getFirst();
+            int col = pair.getSecond();
 
             if (row-1 >= 0 && col-1 >= 0) updateField(row-1, col-1);
             if (row-1 >= 0) updateField(row-1, col);
