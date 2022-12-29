@@ -10,12 +10,12 @@ class PuzzleSolver(test: Boolean) : PuzzleSolverAbstract(test) {
     private val bitString = input.inputLines.first().map{toBits(it)}.joinToString(separator = "")
 
     override fun resultPartOne(): String {
-        val parser = Parser().parser(bitString)
+        val parser = Parser().parsePackage(bitString)
         return parser.versionSum().toString()
     }
 
     override fun resultPartTwo(): String {
-        val parser = Parser().parser(bitString)
+        val parser = Parser().parsePackage(bitString)
         return parser.value().toString()
     }
 
@@ -65,12 +65,11 @@ class Operator(version: Int,
             else -> throw Exception("unexpected operator number")
         }
     }
-
 }
 
-class Parser() {
+class Parser {
 
-    fun parser(input: String): Package {
+    fun parsePackage(input: String): Package {
         val version = input.substring(0,3).toInt(2)
         val id = input.substring(3, 6).toInt(2)
         if (id == 4) {
@@ -99,7 +98,7 @@ class Parser() {
             var bitsRead = 0
             while (bitsRead < totalLengthInBits) {
                 val remainder = operatorInput.substring(15+bitsRead)
-                val pack = parser(remainder)
+                val pack = parsePackage(remainder)
                 packageList.add(pack)
                 bitsRead += pack.bitLength()
             }
@@ -108,7 +107,7 @@ class Parser() {
             var bitsRead = 0
             for (i in 0 until totalPackages) {
                 val remainder = operatorInput.substring(11+bitsRead)
-                val pack = parser(remainder)
+                val pack = parsePackage(remainder)
                 packageList.add(pack)
                 bitsRead += pack.bitLength()
             }
