@@ -72,7 +72,7 @@ abstract class SnailFishNumber{
     }
 
     fun plus(other: SnailFishNumber): SnailFishNumber {
-        val result = SnailFishNumberPair(this, other)
+        val result = SnailFishNumberPair(this, other) as SnailFishNumber
         do {
             val hasReduced = result.reduce() 
         } while (hasReduced)
@@ -84,7 +84,7 @@ abstract class SnailFishNumber{
 
     abstract fun getParent(ofNode: SnailFishNumber): SnailFishNumberPair?
 
-    fun reduce(): Boolean {
+    private fun reduce(): Boolean {
         val nodeToExplode = findToBeExplodedPair(0)
         if (nodeToExplode != null) {
             doExplode(nodeToExplode)
