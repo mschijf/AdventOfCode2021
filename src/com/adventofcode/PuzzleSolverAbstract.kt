@@ -1,5 +1,7 @@
 package com.adventofcode
 
+import java.lang.String.format
+
 abstract class PuzzleSolverAbstract (
     val test: Boolean) {
     private val dayOfMonth = getDayOfMonthFromSubClassName()
@@ -24,7 +26,7 @@ abstract class PuzzleSolverAbstract (
         val startTime = System.currentTimeMillis()
         val result = getResult()
         val timePassed = System.currentTimeMillis() - startTime
-        println("Result part $puzzlePart: $result (after ${timePassed / 1000}.${timePassed % 1000} sec)")
+        println("Result part $puzzlePart: $result " + format("(after %d.%03d sec)", timePassed/1000, timePassed%1000))
     }
 
     private fun getDayOfMonthFromSubClassName(): Int {
