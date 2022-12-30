@@ -10,14 +10,11 @@ fun main() {
 class PuzzleSolver(test: Boolean) : PuzzleSolverAbstract(test) {
 
     override fun resultPartOne(): String {
-        val snailFishNumberList = input.inputLines.map {SnailFishNumber.fromString(it)}
-        var sum = snailFishNumberList[0]
-        for (i in 1 until snailFishNumberList.size) {
-            sum = sum.plus(snailFishNumberList[i])
-            println(sum)
-        }
-        println(sum)
-        return sum.magnitude().toString()
+        return input.inputLines
+            .map {SnailFishNumber.fromString(it)}
+            .reduce { acc, snailFishNumber -> acc.plus(snailFishNumber) }
+            .magnitude()
+            .toString()
     }
 
     override fun resultPartTwo(): String {
@@ -28,8 +25,8 @@ class PuzzleSolver(test: Boolean) : PuzzleSolverAbstract(test) {
                 if (snailNumber1 != snailNumber2) {
                     val item1 = SnailFishNumber.fromString(snailNumber1)
                     val item2 = SnailFishNumber.fromString(snailNumber2)
-                    val sum1 = item1.plus(item2)
-                    maxMagnitude = max(maxMagnitude, sum1.magnitude())
+                    val sum = item1.plus(item2)
+                    maxMagnitude = max(maxMagnitude, sum.magnitude())
                 }
             }
         }
