@@ -12,57 +12,28 @@ class PuzzleSolver(test: Boolean) : PuzzleSolverAbstract(test) {
 
     override fun resultPartOne(): String {
         val actionList = input.inputLines.map {Action(it)}.filter{it.inRange(-50,50)}
-        var cuboidSet = CuboidSet()
-
-        actionList.forEach {action ->
-            if (action.turnOn) {
-                cuboidSet = cuboidSet.plus(action.cuboid)
-            } else {
-                cuboidSet = cuboidSet.minus(action.cuboid)
-            }
-//            println(cuboidSet.cubeCount())
-        }
-
+        val cuboidSet = doSteps(actionList)
         return cuboidSet.cubeCount().toString()
-//
-//
-//        val newCube  = Cuboid(-27, 23, -28, -22, 8, 29)
-//        val cube = Cuboid(-20, 28, -29, -22, 8, 16)
-//
-//        println(newCube.minus(cube))
-//
-//        val c1 = Cuboid(-27, -21, -28, -22, 8, 16)
-//        val c2 = Cuboid(-27, 23, -28, -22, 17, 29)
-//
-//        println(c1)
-//        println(c2)
-//
-//
-//        val org = Cuboid(-22, -21, -29, 23, -38, 16)
-//
-//        println("nc & org = " + newCube.intersection(org))
-//        println("c1 & org = " + c1.intersection(org))
-//        println("c2 & org = " + c2.intersection(org))
-//
-//
-//        return "HALLO"
     }
 
     override fun resultPartTwo(): String {
         val actionList = input.inputLines.map {Action(it)}
-        var cuboidSet = CuboidSet()
-
-        actionList.forEach {action ->
-            if (action.turnOn) {
-                cuboidSet = cuboidSet.plus(action.cuboid)
-            } else {
-                cuboidSet = cuboidSet.minus(action.cuboid)
-            }
-        }
-
+        val cuboidSet = doSteps(actionList)
         return cuboidSet.cubeCount().toString()
     }
 
+    private fun doSteps(actionList: List<Action>): CuboidSet {
+        var cuboidSet = CuboidSet()
+
+        actionList.forEach {action ->
+            cuboidSet = if (action.turnOn) {
+                cuboidSet.plus(action.cuboid)
+            } else {
+                cuboidSet.minus(action.cuboid)
+            }
+        }
+        return cuboidSet
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -92,11 +63,7 @@ class CuboidSet(
     fun plus(newCuboid: Cuboid): CuboidSet {
         var leftOver = listOf(newCuboid)
         for (cube in cuboidList) {
-            val newLeftOverList = mutableListOf<Cuboid>()
-            for (newCube in leftOver) {
-                newLeftOverList.addAll(newCube.minus(cube))
-            }
-            leftOver = newLeftOverList
+            leftOver = leftOver.map{ leftOverCuboid -> leftOverCuboid.minus(cube)}.flatten()
         }
         return CuboidSet(cuboidList + leftOver)
     }
@@ -109,12 +76,12 @@ class CuboidSet(
 }
 
 class Cuboid(
-    val minX: Long,
-    val maxX: Long,
-    val minY: Long,
-    val maxY: Long,
-    val minZ: Long,
-    val maxZ: Long) {
+    private val minX: Long,
+    private val maxX: Long,
+    private val minY: Long,
+    private val maxY: Long,
+    private val minZ: Long,
+    private val maxZ: Long) {
 
     override fun toString() = "(X:$minX..$maxX  Y:$minY..$maxY  Z:$minZ..$maxZ)"
 
@@ -226,6 +193,6 @@ class Cuboid(
 
     fun isLegalCuboid() = minX <= maxX && minY <= maxY && minZ <= maxZ
 
-    fun cubeCount() = (1 + maxX - minX).toLong() * (1 + maxY - minY).toLong() * (1 + maxZ - minZ).toLong()
+    fun cubeCount() = (1 + maxX - minX) * (1 + maxY - minY) * (1 + maxZ - minZ)
 }
 
