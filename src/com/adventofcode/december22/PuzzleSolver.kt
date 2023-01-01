@@ -124,8 +124,6 @@ class Cuboid(
         if (!intersection.isLegalCuboid())
             return listOf(this)
 
-
-
         if (minX < intersection.minX && intersection.maxX < maxX) {
             result.add(Cuboid(minX, intersection.minX-1, minY, maxY, minZ, maxZ))
             minX = intersection.minX
@@ -142,7 +140,6 @@ class Cuboid(
         if (minX < intersection.minX) {
             if (minY < intersection.minY) {
                 if (minZ < intersection.minZ) {
-                    //intersect rechtsonder , ZO
                     result.add(Cuboid(minX, intersection.minX-1, intersection.minY, intersection.maxY, intersection.minZ, intersection.maxZ))
                     result.add(Cuboid(minX, maxX,              minY, intersection.minY-1,              intersection.minZ, intersection.maxZ))
                     result.add(Cuboid(minX, maxX,              minY, maxY,                                   minZ, intersection.minZ-1))
@@ -152,7 +149,6 @@ class Cuboid(
                     result.add(Cuboid(minX, maxX,              minY, maxY,                             intersection.maxZ+1, maxZ))
                 }
             } else {
-                //intersect rechtsboven , NO
                 if (minZ < intersection.minZ) {
                     result.add(Cuboid(minX, intersection.minX-1, intersection.minY, intersection.maxY, intersection.minZ, intersection.maxZ))
                     result.add(Cuboid(minX, maxX,              intersection.maxY+1, maxY,              intersection.minZ, intersection.maxZ))
@@ -166,7 +162,6 @@ class Cuboid(
         } else {
             if (minY < intersection.minY) {
                 if (minZ < intersection.minZ) {
-                    //intersect linksonder , ZW
                     result.add(Cuboid(intersection.maxX+1, maxX, intersection.minY, intersection.maxY, intersection.minZ, intersection.maxZ))
                     result.add(Cuboid(minX, maxX,              minY, intersection.minY-1,              intersection.minZ, intersection.maxZ))
                     result.add(Cuboid(minX, maxX,              minY, maxY,                                   minZ, intersection.minZ-1))
@@ -177,7 +172,6 @@ class Cuboid(
                 }
             } else {
                 if (minZ < intersection.minZ) {
-                    //intersect linksboven , NW
                     result.add(Cuboid(intersection.maxX+1, maxX, intersection.minY, intersection.maxY, intersection.minZ, intersection.maxZ))
                     result.add(Cuboid(minX, maxX,              intersection.maxY+1, maxY,              intersection.minZ, intersection.maxZ))
                     result.add(Cuboid(minX, maxX,              minY, maxY,                                   minZ, intersection.minZ-1))
