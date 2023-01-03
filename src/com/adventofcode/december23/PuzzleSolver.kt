@@ -21,14 +21,15 @@ class PuzzleSolver(test: Boolean) : PuzzleSolverAbstract(test) {
 //    Result part 2: 44169 (after 73.782 sec)
 
 //    Real input:
-//    Result part 1: 18051 (after 4.589 sec)
-//    Result part 2: 50245 (after 110.456 sec)
+//    Result part 1: 18051 (after 0.537 sec)
+//    Result part 2: 50245 (after 7.641 sec)
 
     override fun resultPartTwo(): String {
         val extraLines = listOf("  #D#C#B#A#", "  #D#B#A#C#")
         val board = Board(input.inputLines.subList(0,3) + extraLines + input.inputLines.subList(3,5))
 
         val result = board.solve(0, 1_000_000_000)
+
         return result.toString()
     }
 
@@ -71,11 +72,11 @@ class Board(inputLines: List<String>) {
             return 1_000_000_000
         }
 
-        var minimalValue = 1_000_000_000
+        var minimalValue = minimalSoFar
         val moves = generateMoves()
         for (move in moves) {
             move.fromPos.moveLetterTo(move.toPos)
-            minimalValue = min(minimalValue, solve(cost+move.cost, min(minimalSoFar, minimalValue)))
+            minimalValue = min(minimalValue, solve(cost+move.cost, minimalValue))
             move.toPos.moveLetterTo(move.fromPos)
         }
         return minimalValue
