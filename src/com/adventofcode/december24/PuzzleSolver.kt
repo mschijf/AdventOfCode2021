@@ -12,14 +12,10 @@ class PuzzleSolver(test: Boolean) : PuzzleSolverAbstract(test) {
     val actionList = input.inputLines.map {Action(it)}
 
     override fun resultPartOne(): String {
-        val alu = Alu("9")
-        try {
-            actionList.forEach {
-                alu.doAction(it)
-                println(alu)
-            }
-        }catch (exc: java.lang.Exception) {
-
+        val alu = Alu("12345678912345")
+        actionList.forEach {
+            alu.doAction(it)
+            println(alu)
         }
         return "WIP"
     }
