@@ -13,62 +13,51 @@ class PuzzleSolver(test: Boolean) : PuzzleSolverAbstract(test) {
 
     private val scannerList = input.inputLines.splitByCondition { it.isBlank() }.map{Scanner.of(it)}
 
-    /*
-     *   1. ga overeenkomsten met scanner 0 na
-     *      --> dit olever een lijst van sets op die relatief zijn tov scanner 0
-     *   2. ga voor alle nog niet gemapte scanners, de overeenkomsten zoeken met de reeds gevonden set.
-     */
+    override fun resultPartOne(): String {
+        return getTransformedAndTransposedScannerList()
+            .flatMap {it.beaconPositions }
+            .distinct()
+            .size.toString()
+    }
 
-
-
-//    override fun resultPartOne(): String {
-//        val baseSet = scannerList[0].beaconPositions.toMutableSet()
-//        val scannerSet = mutableSetOf<String>(scannerList[0].name)
-//        while (scannerSet.size != scannerList.size) {
-//            scannerList.filter{ it.name !in scannerSet}.forEach { scanner ->
-//                val result = Scanner("", baseSet).getOverlapWithOrNull(scanner)
-//                if (result != null) {
-//                    scannerSet.add(scanner.name)
-//                    baseSet += result.beaconSet
-//                }
-//            }
-//        }
-//        return baseSet.size.toString()
-//    }
-
-
-    // 17435 is too high
     override fun resultPartTwo(): String {
-        val baseSet = scannerList[0].beaconPositions.toMutableSet()
-        val scannerSet = mutableSetOf<String>(scannerList[0].name)
-        val scannerPositionSet = mutableSetOf(Point3D(0,0,0))
-        while (scannerSet.size != scannerList.size) {
-            scannerList.filter{ it.name !in scannerSet}.forEach { scanner ->
-                val result = Scanner("", baseSet).getOverlapWithOrNull(scanner)
-                if (result != null) {
-                    scannerSet.add(scanner.name)
-                    baseSet += result.beaconSet
-                    scannerPositionSet.add(result.difference)
+        return getTransformedAndTransposedScannerList()
+            .mapCombinedItems { scanner1, scanner2 ->  scanner1.scannerPosition!!.distanceTo(scanner2.scannerPosition!!)}
+            .max()
+            .toString()
+    }
+
+    private var lazyResult: List<Scanner>? = null
+    private fun getTransformedAndTransposedScannerList(): List<Scanner> {
+        if (lazyResult != null)
+            return lazyResult!!
+        val scanner0 = scannerList.first()
+        val todo = scannerList.drop(1).toMutableSet()
+        val transformedScannerList = mutableListOf(Scanner(scanner0.id, scanner0.beaconPositions, Point3D(0,0,0)))
+        transformedScannerList.addAll(todo.mapNotNull { scanner0.transformAndTranspose(it) })
+        while (todo.isNotEmpty()) {
+            todo.toList().forEach { scanner ->
+                for (transformedScanner in transformedScannerList) {
+                    val result = transformedScanner.transformAndTranspose(scanner)
+                    if (result != null) {
+                        todo -= scanner
+                        transformedScannerList.add(result)
+                        break
+                    }
                 }
             }
         }
-        return scannerPositionSet.toList()
-            .mapCombinedItems { beacon1, beacon2 ->  beacon1.distanceTo(beacon2)}
-            .max()
-            .toString()
+        lazyResult = transformedScannerList
+        return transformedScannerList
     }
 
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 
-private class Solution(val scanners: Set<Point3D>, val beacons: Set<Point3D>)
+data class Scanner(val id: Int, val beaconPositions: Set<Point3D>, val scannerPosition: Point3D? = null) {
 
-data class Transform(val scanner1: String, val scanner2: String, val difference: Point3D, val beaconSet: Set<Point3D>)
-
-class Scanner(val name: String, val beaconPositions: Set<Point3D>, var scannerPosition: Point3D? = null) {
-
-    fun getOverlapWithOrNull(otherScanner: Scanner): Transform? {
+    fun transformAndTranspose(otherScanner: Scanner): Scanner? {
         (0..5).forEach { facingIndex ->
             (0..3).forEach { rotatingIndex ->
                 val transformedSet = otherScanner.beaconPositions.map { it.face(facingIndex).rotate(rotatingIndex) }.toSet()
@@ -77,10 +66,9 @@ class Scanner(val name: String, val beaconPositions: Set<Point3D>, var scannerPo
                     transformedSet.forEach { s2 ->
                         val difference = s1-s2
                         val movedTransformedSet = transformedSet.map { it.plus(difference) }.toSet()
-                        val doorsnede = movedTransformedSet.intersect(this.beaconPositions)
-                        if (doorsnede.size >= 12) {
+                        if (movedTransformedSet.intersect(this.beaconPositions).size >= 12) {
                             //we have a mapping!!
-                            return Transform(this.name, otherScanner.name, difference, movedTransformedSet)
+                            return Scanner(otherScanner.id, movedTransformedSet, difference)
                         }
                     }
                 }
@@ -96,7 +84,7 @@ class Scanner(val name: String, val beaconPositions: Set<Point3D>, var scannerPo
         // ...
         fun of (rawInput: List<String>) : Scanner {
             return Scanner(
-                name = rawInput.first().substringAfter("--- scanner "). substringBefore(" ---"),
+                id = rawInput.first().substringAfter("--- scanner "). substringBefore(" ---").toInt(),
                 beaconPositions = rawInput.drop(1).map{ Point3D.of(it) }.toSet()
             )
         }
