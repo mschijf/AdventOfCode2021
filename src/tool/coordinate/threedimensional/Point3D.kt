@@ -11,6 +11,9 @@ data class Point3D(val x: Int, val y: Int, val z: Int) {
 
     fun distanceTo(otherPos: Point3D) = (otherPos.x - x).absoluteValue + (otherPos.y - y).absoluteValue + (otherPos.z - z).absoluteValue
 
+    operator fun plus(other: Point3D): Point3D = plusXYZ(other.x, other.y, other.z)
+    operator fun minus(other: Point3D): Point3D = plusXYZ(-other.x, -other.y, -other.z)
+
     companion object {
         fun of(input: String): Point3D = input
             .removeSurrounding("<", ">")

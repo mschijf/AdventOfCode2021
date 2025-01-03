@@ -1,5 +1,6 @@
 package tool.coordinate.twodimensional
 
+import tool.coordinate.threedimensional.Point3D
 import kotlin.math.absoluteValue
 
 fun pos(x: Int, y: Int) = Point.of(gridOrientation = true, x,y)
@@ -52,6 +53,9 @@ data class Point private constructor(
 
     fun plusX(dx: Int) = plusXY(dx, 0)
     fun plusY(dy: Int) = plusXY(0, dy)
+
+    operator fun plus(other: Point): Point = plusXY(other.x, other.y)
+    operator fun minus(other: Point): Point = plusXY(-other.x, -other.y)
 
     fun moveSteps(dir: Direction, steps: Int) = plusXY(steps * dir.dXY().x, steps * dir.dXY().y)
     fun moveSteps(dir: WindDirection, steps: Int) = plusXY(steps * dir.dXY().x, steps * dir.dXY().y)

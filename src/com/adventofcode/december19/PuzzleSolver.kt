@@ -32,19 +32,15 @@ class PuzzleSolver(test: Boolean) : PuzzleSolverAbstract(test) {
         if (lazyResult != null)
             return lazyResult!!
         val scanner0 = scannerList.first()
-        val todo = scannerList.drop(1).toMutableSet()
+        val todo = ArrayDeque(scannerList.drop(1))
         val transformedScannerList = mutableListOf(Scanner(scanner0.id, scanner0.beaconPositions, Point3D(0,0,0)))
-        transformedScannerList.addAll(todo.mapNotNull { scanner0.transformAndTranspose(it) })
         while (todo.isNotEmpty()) {
-            todo.toList().forEach { scanner ->
-                for (transformedScanner in transformedScannerList) {
-                    val result = transformedScanner.transformAndTranspose(scanner)
-                    if (result != null) {
-                        todo -= scanner
-                        transformedScannerList.add(result)
-                        break
-                    }
-                }
+            val scanner = todo.removeFirst()
+            val result = transformedScannerList.firstNotNullOfOrNull { it.transformAndTranspose(scanner) }
+            if (result != null) {
+                transformedScannerList.add(result)
+            } else {
+                todo.add(scanner)
             }
         }
         lazyResult = transformedScannerList
@@ -67,7 +63,7 @@ data class Scanner(val id: Int, val beaconPositions: Set<Point3D>, val scannerPo
                         val difference = s1-s2
                         val movedTransformedSet = transformedSet.map { it.plus(difference) }.toSet()
                         if (movedTransformedSet.intersect(this.beaconPositions).size >= 12) {
-                            //we have a mapping!!
+                            //we have a mapping!! create new scanner with transposed details
                             return Scanner(otherScanner.id, movedTransformedSet, difference)
                         }
                     }
@@ -91,11 +87,6 @@ data class Scanner(val id: Int, val beaconPositions: Set<Point3D>, val scannerPo
     }
 }
 
-operator fun Point3D.plus(other: Point3D): Point3D =
-    Point3D(x + other.x, y + other.y, z + other.z)
-
-operator fun Point3D.minus(other: Point3D): Point3D =
-    Point3D(x - other.x, y - other.y, z - other.z)
 
 fun Point3D.face(facing: Int): Point3D =
     when (facing) {
